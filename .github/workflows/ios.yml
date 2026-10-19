@@ -38,7 +38,11 @@ jobs:
           xcodebuild -list
           scheme="$(xcodebuild -list -json | node -e "const s=JSON.parse(require('fs').readFileSync(0)).workspace.schemes; console.log(s.find(x=>x.endsWith('-Package'))||s[0])")"
           echo "scheme $scheme"
-          xcodebuild test -scheme "$scheme" -destination "id=$udid" -quiet
+          set +e
+          xcodebuild test -scheme "$scheme" -destination "id=$udid" > /tmp/test.log 2>&1
+          rc=$?
+          grep -E "error:|failed|Executed|XCT" /tmp/test.log | head -80
+          exit $rc
 
       - name: Install xtool
         run: brew install xtool-org/tap/xtool
