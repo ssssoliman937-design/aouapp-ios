@@ -27,8 +27,15 @@ jobs:
           yml="$(sed -n 's/^bundleID: *//p' ios/xtool.yml)"
           test "$cfg" = "$yml" || { echo "bundle id drift: $yml != $cfg"; exit 1; }
 
-      - name: Swift tests (core)
-        run: swift test --package-path ios
+      # On the iOS Simulator, not macOS: the SwiftUI target is iOS-only
+      # (fullScreenCover, keyboardType), and this compiles it for real.
+      - name: Build + test on iOS Simulator
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          udid="$(xcrun simctl list devices available | grep -m1 -E 'iPhone' | grep -oE '[0-9A-F-]{36}')"
+          echo "simulator $udid"
+          xcodebuild test -scheme AOUHub-Package -destination "id=$udid" -quiet
 
       - name: Install xtool
         run: brew install xtool-org/tap/xtool

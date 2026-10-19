@@ -28,17 +28,21 @@ struct CourseHubView: View {
     /// Timeline deadlines (already classified) + dated activities from the course page,
     /// classified the same way and de-duplicated against the calendar ("Quiz 2 closes" = "Quiz 2").
     private var tasks: [TimelineItem] {
-        let events = courseItems.filter { $0.type == .assignment || $0.type == .quiz }
-        let seen = Set(events.map { DeadlineClassifier.activityKey($0.title) })
-        let fromContent = sections.flatMap(\.modules)
-            .filter { ($0.modname == "assign" || $0.modname == "quiz") && !seen.contains(DeadlineClassifier.activityKey($0.name)) }
-            .compactMap { m -> TimelineItem? in
-                guard let due = m.due,
-                      DeadlineClassifier.classify(due: due, now: Date(), course: course, itemInstanceId: course.lmsCourseId).isCurrent
-                else { return nil }
-                return TimelineItem(id: "m-\(m.id)", title: m.name, type: m.modname == "assign" ? .assignment : .quiz,
-                                    start: due, end: nil, course: course.code, location: nil)
+        let events: [TimelineItem] = courseItems.filter { $0.type == .assignment || $0.type == .quiz }
+        let seen: Set<String> = Set(events.map { DeadlineClassifier.activityKey($0.title) })
+        let now = Date()
+        var fromContent: [TimelineItem] = []
+        for section in sections {
+            for m in section.modules {
+                let isTask = m.modname == "assign" || m.modname == "quiz"
+                guard isTask, !seen.contains(DeadlineClassifier.activityKey(m.name)), let due = m.due else { continue }
+                let verdict = DeadlineClassifier.classify(due: due, now: now, course: course, itemInstanceId: course.lmsCourseId)
+                guard verdict.isCurrent else { continue }
+                let type: EventType = m.modname == "assign" ? .assignment : .quiz
+                fromContent.append(TimelineItem(id: "m-\(m.id)", title: m.name, type: type,
+                                                start: due, end: nil, course: course.code, location: nil))
             }
+        }
         return (events + fromContent).sorted { $0.start < $1.start }
     }
 
