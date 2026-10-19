@@ -47,7 +47,7 @@ final class UniversityClientTests: XCTestCase {
             }
             let form = String(decoding: request.body ?? Data(), as: UTF8.self)
             if form.contains("core_webservice_get_site_info") { return try json(["userid": 77]) }
-            if form.contains("core_enrol_get_users_courses") { return try json([["id": 11, "shortname": "GT101-2526", "fullname": "Information Technology"]]) }
+            if form.contains("core_enrol_get_users_courses") { return try json([["id": 11, "shortname": "GT101-2526", "fullname": "Information Technology", "startdate": 1_790_000_000, "enddate": 1_805_000_000]]) }
             return try json(["events": [["name": "TMA 2 is due", "modulename": "assign", "timesort": 1_800_000_000, "course": ["shortname": "GT101", "id": 11]]]])
         }
     }
