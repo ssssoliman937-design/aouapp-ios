@@ -1,0 +1,61 @@
+name: iOS
+
+# Compiles and tests the SwiftUI app on macOS and packages an UNSIGNED .ipa
+# with xtool. Students sign it with their own Apple ID (Sideloadly/AltStore).
+# A pushed tag v<version> publishes the .ipa as a GitHub Release asset named
+# AOUHub.ipa, so releases/latest/download/AOUHub.ipa always resolves.
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bundle id matches shared config
+        run: |
+          set -euo pipefail
+          cfg="$(node -e "console.log(require('./shared/config/app.json').platforms.ios.bundleId)")"
+          yml="$(sed -n 's/^bundleID: *//p' ios/xtool.yml)"
+          test "$cfg" = "$yml" || { echo "bundle id drift: $yml != $cfg"; exit 1; }
+
+      - name: Swift tests (core)
+        run: swift test --package-path ios
+
+      - name: Install xtool
+        run: brew install xtool-org/tap/xtool
+
+      - name: Build unsigned IPA
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          xtool dev build --configuration release --ipa
+          ls -la xtool
+          ipa="$(ls xtool/*.ipa | head -1)"
+          [ "$ipa" = "xtool/AOUHub.ipa" ] || mv "$ipa" xtool/AOUHub.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AOUHub-ipa
+          path: ios/xtool/AOUHub.ipa
+
+      - name: Publish release asset
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          shasum -a 256 ios/xtool/AOUHub.ipa | tee AOUHub.ipa.sha256
+          gh release create "$tag" ios/xtool/AOUHub.ipa AOUHub.ipa.sha256 \
+            --title "AOU Hub iOS ${tag#v}" \
+            --notes "Unsigned IPA. Install with Sideloadly or AltStore using your own Apple ID. Requires iOS 17+." \
+            || gh release upload "$tag" ios/xtool/AOUHub.ipa AOUHub.ipa.sha256 --clobber

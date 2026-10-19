@@ -1,0 +1,43 @@
+{
+  "$schema": "../schemas/app-config.schema.json",
+  "app": {
+    "name": "AOU Hub",
+    "supportUrl": "https://github.com/ssssoliman937-design/aouapp/issues"
+  },
+  "university": {
+    "sisBase": "https://sisegy.arabou.edu.kw/SPAPIEGY",
+    "lmsBase": "https://egylms.arabou.edu.kw",
+    "lmsService": "moodle_mobile_app"
+  },
+  "appLock": {
+    "defaultEnabled": false,
+    "relockAfterSeconds": 30,
+    "maxFailedAttempts": 3
+  },
+  "platforms": {
+    "android": {
+      "applicationId": "dev.soliman.aou_hub",
+      "biometric": "fingerprint",
+      "update": {
+        "provider": "signed-manifest",
+        "repository": "ssssoliman937-design/aouapp",
+        "manifestUrl": "https://raw.githubusercontent.com/ssssoliman937-design/aouapp/main/update/update.json",
+        "manifestHosts": ["raw.githubusercontent.com"],
+        "packageHosts": ["github.com", "objects.githubusercontent.com", "release-assets.githubusercontent.com"],
+        "checkIntervalHours": 6
+      }
+    },
+    "ios": {
+      "bundleId": "dev.soliman.aouhub",
+      "biometric": "faceID",
+      "update": {
+        "provider": "github-releases",
+        "repository": "ssssoliman937-design/aouapp-ios",
+        "latestReleaseUrl": "https://api.github.com/repos/ssssoliman937-design/aouapp-ios/releases/latest",
+        "releasesPageUrl": "https://github.com/ssssoliman937-design/aouapp-ios/releases",
+        "manifestHosts": ["api.github.com"],
+        "checkIntervalHours": 6
+      }
+    }
+  }
+}

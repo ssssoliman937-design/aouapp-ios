@@ -1,0 +1,16 @@
+version: 1
+# Must match platforms.ios.bundleId in ../shared/config/app.json
+# (scripts/check-shared.sh fails on drift).
+bundleID: dev.soliman.aouhub
+product: AOUHub
+infoPath: Info.plist
+iconPath: ../shared/icons/AppIcon.png
+# Single source of truth: each folder is copied as-is into the .app root
+# (AOUHub.app/config/app.json, AOUHub.app/l10n/ar.json, ...). Nothing from
+# /shared is duplicated inside /ios.
+resources:
+  - ../shared/config
+  - ../shared/design
+  - ../shared/l10n
+  - ../shared/fixtures
+  - ../shared/fonts

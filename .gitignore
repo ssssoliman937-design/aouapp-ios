@@ -1,0 +1,5 @@
+.DS_Store
+ios/.build/
+ios/.swiftpm/
+ios/xtool/
+*.ipa

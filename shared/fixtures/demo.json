@@ -1,0 +1,46 @@
+{
+  "$comment": "Clearly fake demo data (same fixtures as android/lib/demo/demo_data.dart and the golden screens). Times are hour offsets from 'now' so the demo never goes stale. 'tone' is the course tile color token, fixed so every platform shows the same colors.",
+  "student": {
+    "id": 20000000,
+    "name": "Demo Student",
+    "firstName": "Demo",
+    "initials": "DS",
+    "program": "Information Technology and Computing",
+    "track": "Computer Science",
+    "gpa": 3.12,
+    "termGpa": 3.79,
+    "gpaHistory": [2.98, 3.05, 3.12],
+    "completionPct": 42,
+    "completedHours": 51,
+    "registeredHours": 15,
+    "totalHours": 120,
+    "term": "Summer 2025/2026",
+    "unreadNotifications": 13,
+    "syncedMinutesAgo": 4
+  },
+  "timeline": [
+    { "title": "Lecture — General Studies", "type": "lecture", "offsetHours": 2, "durationHours": 2, "course": "GR118", "location": "FE17" },
+    { "title": "TMA 2 — Information Technology", "type": "assignment", "offsetHours": 20, "course": "GT101" },
+    { "title": "Lecture — Mathematics", "type": "lecture", "offsetHours": 26, "durationHours": 2, "course": "MT101", "location": "FE09" },
+    { "title": "Quiz 3 — English Language", "type": "quiz", "offsetHours": 50, "course": "EL099" },
+    { "title": "TMA 1 — General Studies (overdue)", "type": "assignment", "offsetHours": -30, "course": "GR118" },
+    { "title": "Writing Center workshop", "type": "event", "offsetHours": 72, "location": "Online" },
+    { "title": "Final Exam — Mathematics", "type": "exam", "offsetHours": 72, "course": "MT101", "location": "Hall B" },
+    { "title": "Final Exam — Information Technology", "type": "exam", "offsetHours": 410, "course": "GT101", "location": "Hall A" }
+  ],
+  "courses": [
+    { "code": "GT101", "name": "Information Technology", "creditHours": 3, "onLms": true, "tone": "accent" },
+    { "code": "GR118", "name": "General Studies", "creditHours": 3, "onLms": true, "tone": "brand" },
+    { "code": "EL099", "name": "English Language & Literature", "creditHours": 0, "onLms": true, "tone": "ok" },
+    { "code": "MST129", "name": "Statistics for IT", "creditHours": 4, "onLms": true, "tone": "accent" },
+    { "code": "MT101", "name": "Mathematics", "creditHours": 3, "onLms": false, "tone": "info" },
+    { "code": "GB102", "name": "Business Communication", "onLms": true, "tone": "info" }
+  ],
+  "grades": [
+    { "code": "EL099", "creditHours": 0, "status": "Grade Pending", "tma": 0, "mid": 19, "final": 33 },
+    { "code": "GR118", "creditHours": 3, "status": "Grade Pending", "tma": 19.5, "mid": 25 },
+    { "code": "GT101", "creditHours": 3, "status": "B+", "tma": 17, "mid": 24, "final": 41 },
+    { "code": "MST129", "creditHours": 4, "status": "A-", "tma": 20, "mid": 28, "final": 45 },
+    { "code": "MT101", "creditHours": 3, "status": "Grade Pending", "tma": 14, "mid": 22 }
+  ]
+}

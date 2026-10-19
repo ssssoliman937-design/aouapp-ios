@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "aou-hub/app-config",
+  "title": "AOU Hub shared app config",
+  "description": "Single source of truth for both platforms. Android reads it through the generated android/lib/generated/shared_config.g.dart; iOS bundles shared/config as a root resource.",
+  "type": "object",
+  "required": [
+    "app",
+    "appLock",
+    "platforms",
+    "university"
+  ],
+  "properties": {
+    "app": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "supportUrl": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "appLock": {
+      "type": "object",
+      "required": [
+        "defaultEnabled",
+        "relockAfterSeconds",
+        "maxFailedAttempts"
+      ],
+      "properties": {
+        "defaultEnabled": {
+          "type": "boolean"
+        },
+        "relockAfterSeconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxFailedAttempts": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "platforms": {
+      "type": "object",
+      "required": [
+        "android",
+        "ios"
+      ],
+      "properties": {
+        "android": {
+          "$ref": "#/$defs/platform"
+        },
+        "ios": {
+          "$ref": "#/$defs/platform"
+        }
+      }
+    },
+    "university": {
+      "type": "object",
+      "required": [
+        "sisBase",
+        "lmsBase",
+        "lmsService"
+      ],
+      "description": "University endpoints (must match android/lib/core/env.dart).",
+      "properties": {
+        "sisBase": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "lmsBase": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "lmsService": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "platform": {
+      "type": "object",
+      "required": [
+        "biometric",
+        "update"
+      ],
+      "properties": {
+        "biometric": {
+          "enum": [
+            "fingerprint",
+            "faceID"
+          ]
+        },
+        "update": {
+          "type": "object",
+          "required": [
+            "provider",
+            "repository",
+            "manifestHosts",
+            "checkIntervalHours"
+          ],
+          "properties": {
+            "provider": {
+              "enum": [
+                "signed-manifest",
+                "github-releases"
+              ]
+            },
+            "repository": {
+              "type": "string",
+              "pattern": "^[\\w.-]+/[\\w.-]+$"
+            },
+            "manifestUrl": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "latestReleaseUrl": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "releasesPageUrl": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "manifestHosts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "packageHosts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "checkIntervalHours": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}
