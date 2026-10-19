@@ -38,6 +38,18 @@ public struct TimelineItem: Identifiable, Equatable, Sendable {
     /// Moodle course id the deadline came from (LMS events only), for DeadlineClassifier.
     public var lmsCourseId: Int? = nil
 
+    public init(id: String, title: String, type: EventType, start: Date, end: Date?,
+                course: String?, location: String?, lmsCourseId: Int? = nil) {
+        self.id = id
+        self.title = title
+        self.type = type
+        self.start = start
+        self.end = end
+        self.course = course
+        self.location = location
+        self.lmsCourseId = lmsCourseId
+    }
+
     public func isOverdue(at now: Date) -> Bool { type.isTask && start < now }
 }
 
