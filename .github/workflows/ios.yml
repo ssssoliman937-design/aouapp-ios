@@ -35,7 +35,10 @@ jobs:
           set -euo pipefail
           udid="$(xcrun simctl list devices available | grep -m1 -E 'iPhone' | grep -oE '[0-9A-F-]{36}')"
           echo "simulator $udid"
-          xcodebuild test -scheme AOUHub-Package -destination "id=$udid" -quiet
+          xcodebuild -list
+          scheme="$(xcodebuild -list -json | node -e "const s=JSON.parse(require('fs').readFileSync(0)).workspace.schemes; console.log(s.find(x=>x.endsWith('-Package'))||s[0])")"
+          echo "scheme $scheme"
+          xcodebuild test -scheme "$scheme" -destination "id=$udid" -quiet
 
       - name: Install xtool
         run: brew install xtool-org/tap/xtool
